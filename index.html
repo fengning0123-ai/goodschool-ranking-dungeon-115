@@ -1,0 +1,1686 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <title>整合測試</title>
+    
+
+  </head>
+    
+  <body>
+  <!doctype html>
+<html lang="zh-TW" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>115桃連區免試比序系統</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&amp;family=Noto+Sans+TC:wght@400;500;700;900&amp;display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body, #app { height: 100%; width: 100%; }
+    body { font-family: 'Noto Sans TC', sans-serif; }
+
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 15px rgba(0,255,255,0.3), inset 0 0 15px rgba(0,255,255,0.05); }
+      50% { box-shadow: 0 0 30px rgba(0,255,255,0.6), inset 0 0 25px rgba(0,255,255,0.1); }
+    }
+
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes statusPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    @keyframes levelGlow {
+      0%, 100% { box-shadow: 0 0 20px rgba(0,255,255,0.4), inset 0 0 20px rgba(0,255,255,0.1); }
+      50% { box-shadow: 0 0 40px rgba(0,255,255,0.8), inset 0 0 30px rgba(0,255,255,0.2); }
+    }
+
+    .neon-text { color: #00ffff; }
+    .purple-text { color: #e91aff; }
+    .gold-text { color: #ff6b35; }
+
+    @keyframes levelUp {
+      0% { transform: scale(1); }
+      25% { transform: scale(1.1); }
+      50% { transform: scale(1.15); }
+      75% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+
+    .glass-panel {
+      background: rgba(0,31,91,0.5);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(0,255,255,0.15);
+    }
+
+    .skill-card {
+      border: 2px solid rgba(0,255,255,0.3);
+      background: linear-gradient(135deg, rgba(0,31,91,0.8) 0%, rgba(75,0,130,0.4) 100%);
+      backdrop-filter: blur(10px);
+      border-radius: 12px;
+      padding: 20px;
+      animation: slideDown 0.6s ease-out;
+    }
+
+    .skill-card:hover { transform: translateY(-2px); border-color: rgba(0,255,255,0.6); }
+
+    .tab-btn {
+      transition: all 0.3s ease;
+      cursor: pointer;
+      padding: 12px 16px;
+      border: 1px solid rgba(0,255,255,0.2);
+      border-radius: 8px;
+      background: rgba(0,255,255,0.05);
+      color: rgba(255,255,255,0.6);
+      font-weight: 600;
+      font-family: 'Orbitron', 'Noto Sans TC', sans-serif;
+    }
+
+    .tab-btn:hover { background: rgba(0,255,255,0.15); border-color: rgba(0,255,255,0.4); }
+
+    .tab-btn.active {
+      background: rgba(0,255,255,0.2);
+      border-color: rgba(0,255,255,0.6);
+      color: #00ffff;
+    }
+
+    .subtab-btn {
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid rgba(0,255,255,0.2);
+      background: rgba(0,255,255,0.05);
+      color: rgba(255,255,255,0.6);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 24px;
+    }
+
+    .subtab-btn:hover { background: rgba(0,255,255,0.15); border-color: rgba(0,255,255,0.4); }
+    .subtab-btn.active { background: rgba(0,255,255,0.2); border-color: rgba(0,255,255,0.6); color: #00ffff; }
+
+    .input-group {
+      padding: 6px;
+      border: 1px solid rgba(0,255,255,0.2);
+      border-radius: 8px;
+      background: rgba(0,31,91,0.3);
+      margin-bottom: 6px;
+    }
+
+    input[type="text"], input[type="number"], select {
+      width: 100%;
+      padding: 8px;
+      background: rgba(0,31,91,0.5);
+      border: 1px solid rgba(0,255,255,0.2);
+      color: #00ffaa;
+      border-radius: 4px;
+      font-size: 24px;
+    }
+
+    input[type="text"]:focus, input[type="number"]:focus, select:focus {
+      outline: none;
+      border-color: #00ffff;
+      box-shadow: 0 0 8px rgba(0,255,255,0.3);
+    }
+
+    label { cursor: pointer; user-select: none; }
+
+    .option-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px;
+      border: 1px solid rgba(0,255,255,0.2);
+      border-radius: 8px;
+      background: rgba(0,255,255,0.05);
+      margin-bottom: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .option-label:hover { background: rgba(0,255,255,0.15); border-color: rgba(0,255,255,0.4); }
+    .option-label input { cursor: pointer; }
+
+    .option-text {
+      font-size: 24px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.7);
+      transition: all 0.3s ease;
+    }
+
+    .option-label.selected .option-text {
+      color: #00ffff;
+      text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff;
+      font-weight: 700;
+    }
+
+    /* Cancel glow for non-selected options */
+    .option-label:not(.selected) .option-text {
+      color: rgba(255,255,255,0.7);
+      text-shadow: none;
+    }
+
+    .checkbox-label {
+      font-size: 24px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.7);
+      transition: all 0.3s ease;
+    }
+
+    .option-label.selected .checkbox-label {
+      color: #c084fc;
+      text-shadow: 0 0 10px #c084fc, 0 0 20px #d717e8;
+      font-weight: 700;
+    }
+
+    /* Cancel glow for unselected checkboxes */
+    .option-label:not(.selected) .checkbox-label {
+      color: rgba(255,255,255,0.7);
+      text-shadow: none;
+    }
+
+    /* Glow for specific high-value options */
+    .option-label.glow-high .option-text {
+      color: #00ffff;
+      text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff;
+      font-weight: 700;
+    }
+
+    .option-label.glow-high .checkbox-label {
+      color: #fbbf24;
+      text-shadow: 0 0 10px #fbbf24, 0 0 20px #ff6b35;
+      font-weight: 700;
+    }
+
+    .select-label {
+      font-size: 24px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.7);
+      transition: all 0.3s ease;
+    }
+
+    .score-box {
+      padding: 8px;
+      border-radius: 8px;
+      background: rgba(0,255,255,0.1);
+      border: 1px solid rgba(0,255,255,0.2);
+      margin-top: 6px;
+    }
+
+    .score-label { font-size: 24px; color: rgba(255,255,255,0.6); }
+    .score-value { font-size: 24px; font-weight: bold; color: #00ffff; margin-top: 2px; }
+
+    .floating-panel {
+      position: fixed;
+      bottom: 30px;
+      left: 30px;
+      z-index: 100;
+      width: 380px;
+      height: 720px;
+      background: linear-gradient(135deg, rgba(0,31,91,0.95) 0%, rgba(75,0,130,0.6) 100%);
+      border: 3px solid rgba(0,255,255,0.5);
+      border-radius: 15px;
+      padding: 24px;
+      box-shadow: 0 0 40px rgba(0,255,255,0.4);
+      cursor: grab;
+    }
+
+    .floating-panel.dragging { cursor: grabbing; }
+    
+    .floating-panel.level-up {
+      animation: levelUp 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+
+    .panel-header { text-align: center; font-size: 24px; letter-spacing: 0.15em; color: rgba(0,255,255,0.8); font-family: 'Orbitron', sans-serif; margin-bottom: 20px; font-weight: bold; }
+    
+    .panel-avatar-section { display: flex; gap: 24px; align-items: center; margin-bottom: 24px; padding-bottom: 24px; border-bottom: 2px solid rgba(0,255,255,0.2); }
+    
+    .panel-avatar { width: 140px; height: 140px; border-radius: 50%; border: 4px solid rgba(0,255,255,0.5); background: linear-gradient(135deg, rgba(0,255,255,0.2), rgba(75,0,130,0.2)); display: flex; align-items: center; justify-content: center; font-size: 80px; flex-shrink: 0; }
+    
+    .panel-rank-info { flex: 1; }
+    .panel-rank-title { font-size: 48px; font-weight: 900; font-family: 'Orbitron', sans-serif; color: #00ffff; margin-bottom: 8px; letter-spacing: 2px; }
+    .panel-rank-subtitle { font-size: 28px; color: rgba(255,255,255,0.7); }
+    
+    .panel-score { text-align: center; margin-bottom: 24px; }
+    .panel-score-label { font-size: 36px; color: rgba(255,255,255,0.6); font-weight: 600; }
+    .panel-score-value { font-size: 64px; font-weight: 900; color: #00ffff; margin-top: 6px; }
+
+    .breakdown { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-top: 24px; }
+    .breakdown-item { text-align: center; padding: 16px; border-radius: 8px; border: 2px solid rgba(0,255,255,0.15); background: rgba(0,255,255,0.05); }
+    .breakdown-label { font-size: 24px; color: rgba(255,255,255,0.6); margin-bottom: 6px; font-weight: 600; }
+    .breakdown-score { font-size: 32px; font-weight: 900; }
+    .breakdown-score.s1 { color: #00ffff; }
+    .breakdown-score.s2 { color: #c084fc; }
+    .breakdown-score.s3 { color: #fbbf24; }
+
+    .tab-panel { display: none; animation: fadeIn 0.4s ease; }
+    .tab-panel.active { display: block; }
+
+    .rank-letter {
+      font-size: 140px;
+      font-weight: 900;
+      font-family: 'Orbitron', sans-serif;
+      text-shadow: 0 0 20px rgba(0,255,255,0.8), 0 0 40px rgba(75,0,130,0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 220px;
+      background: linear-gradient(135deg, rgba(0,255,255,0.15) 0%, rgba(75,0,130,0.15) 100%);
+      border: 3px solid rgba(0,255,255,0.5);
+      border-radius: 20px;
+      animation: levelGlow 2s ease-in-out infinite;
+    }
+
+    .rank-card {
+      background: linear-gradient(135deg, rgba(0,31,91,0.8) 0%, rgba(75,0,130,0.4) 100%);
+      border: 2px solid rgba(0,255,255,0.3);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .rank-card:hover {
+      border-color: rgba(0,255,255,0.6);
+      transform: translateX(4px);
+    }
+
+    .rank-card.active {
+      border-color: #00ffff;
+      background: linear-gradient(135deg, rgba(0,255,255,0.2) 0%, rgba(75,0,130,0.2) 100%);
+      box-shadow: 0 0 20px rgba(0,255,255,0.3);
+    }
+
+    .rank-title {
+      font-weight: bold;
+      color: #00ffff;
+      font-size: 40px;
+      margin-bottom: 12px;
+    }
+
+    .rank-range {
+      font-size: 32px;
+      color: #c084fc;
+      margin-bottom: 16px;
+      font-weight: 600;
+    }
+
+    .rank-exam {
+      font-size: 32px;
+      color: #fbbf24;
+      margin-bottom: 16px;
+      font-weight: 600;
+    }
+
+    .rank-schools {
+      font-size: 32px;
+      color: #ff6b35;
+      margin-bottom: 16px;
+      font-weight: 600;
+    }
+
+    .rank-desc {
+      font-size: 26px;
+      color: #c084fc;
+      padding-top: 32px;
+      border-top: 2px solid rgba(0,255,255,0.15);
+      line-height: 1.6;
+    }
+
+    .rank-card.active .rank-title {
+      text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff;
+    }
+
+    .rank-card.active .rank-range {
+      text-shadow: 0 0 10px #c084fc, 0 0 20px #d717e8;
+    }
+
+    .rank-card.active .rank-exam {
+      text-shadow: 0 0 10px #fbbf24, 0 0 20px #ff6b35;
+    }
+
+    .rank-card.active .rank-schools {
+      text-shadow: 0 0 10px #ff6b35, 0 0 20px #ff4500;
+    }
+
+    .rank-card.active .rank-desc {
+      text-shadow: 0 0 10px #c084fc, 0 0 20px #d717e8;
+    }
+
+    .rank-card .glow-title {
+      text-shadow: none;
+      transition: text-shadow 0.3s ease;
+    }
+
+    .rank-card .glow-range {
+      text-shadow: none;
+      transition: text-shadow 0.3s ease;
+    }
+
+    .rank-card .glow-exam {
+      text-shadow: none;
+      transition: text-shadow 0.3s ease;
+    }
+
+    .rank-card .glow-schools {
+      text-shadow: none;
+      transition: text-shadow 0.3s ease;
+    }
+
+    .rank-card .glow-desc {
+      text-shadow: none;
+      transition: text-shadow 0.3s ease;
+    }
+
+    .rank-card.glowing .glow-title {
+      text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff;
+    }
+
+    .rank-card.glowing .glow-range {
+      text-shadow: 0 0 10px #c084fc, 0 0 20px #d717e8;
+    }
+
+    .rank-card.glowing .glow-exam {
+      text-shadow: 0 0 10px #fbbf24, 0 0 20px #ff6b35;
+    }
+
+    .rank-card.glowing .glow-schools {
+      text-shadow: 0 0 10px #ff6b35, 0 0 20px #ff4500;
+    }
+
+    .rank-card.glowing .glow-desc {
+      text-shadow: 0 0 10px #c084fc, 0 0 20px #d717e8;
+    }
+
+    .character-selector {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin: 12px 0;
+    }
+
+    .character-btn {
+      padding: 12px 8px;
+      border: 2px solid rgba(0,255,255,0.2);
+      border-radius: 8px;
+      background: rgba(0,255,255,0.05);
+      color: rgba(255,255,255,0.6);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 28px;
+      text-align: center;
+    }
+
+    .character-btn:hover {
+      border-color: rgba(0,255,255,0.4);
+      background: rgba(0,255,255,0.15);
+    }
+
+    .character-btn.active {
+      border-color: #00ffff;
+      background: rgba(0,255,255,0.2);
+      box-shadow: 0 0 10px rgba(0,255,255,0.5);
+    }
+  </style>
+  <style>body { box-sizing: border-box; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full">
+   <div class="bg-fixed">
+  <div class="bg-grid"></div>
+  <div class="bg-glow"></div>
+  <canvas id="particles"></canvas>
+</div>
+  <div id="app" class="h-full w-full overflow-auto" style="background: linear-gradient(135deg, #000a1f 0%, #001F5B 30%, #1a0033 60%, #000a1f 100%);">
+   <!-- FLOATING PANEL -->
+   <div id="floatingPanel" class="floating-panel">
+    <div class="panel-header">
+     ⚡ 獵人狀態 ⚡
+    </div>
+    <div style="margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid rgba(0,255,255,0.2);">
+     <div style="font-size: 24px; color: rgba(255,255,255,0.5); margin-bottom: 6px;">
+      獵人名稱
+     </div><input type="text" id="nameInput" placeholder="輸入名字" style="padding: 8px 12px; font-size: 20px; border: 1px solid rgba(0,255,255,0.3); border-radius: 6px; background: rgba(0,255,255,0.1); color: #00ffff; width: 100%;" onchange="updatePlayerName()" onkeyup="updatePlayerName()">
+    </div>
+    <div class="panel-avatar-section">
+     <div class="panel-avatar" id="panelAvatar">
+      ⛏️
+     </div>
+     <div class="panel-rank-info">
+      <div class="panel-rank-title" id="panelRankTitle" style="font-size: 32px; margin-bottom: 4px;">
+       E級
+      </div>
+      <div class="panel-rank-subtitle" id="panelRankSubtitle" style="font-size: 24px;">
+       覺醒初期
+      </div>
+     </div>
+    </div>
+    <div class="panel-score">
+     <div class="panel-score-label">
+      總積分
+     </div>
+     <div class="panel-score-value" id="panelTotal">
+      0
+     </div>
+    </div>
+    <div class="breakdown">
+     <div class="breakdown-item">
+      <div class="breakdown-label">
+       適性
+      </div>
+      <div class="breakdown-score s1" id="panelS1">
+       0
+      </div>
+     </div>
+     <div class="breakdown-item">
+      <div class="breakdown-label">
+       多元
+      </div>
+      <div class="breakdown-score s2" id="panelS2">
+       0
+      </div>
+     </div>
+     <div class="breakdown-item">
+      <div class="breakdown-label">
+       會考
+      </div>
+      <div class="breakdown-score s3" id="panelS3">
+       0
+      </div>
+     </div>
+    </div>
+   </div><!-- MAIN CONTENT -->
+   <div class="w-full">
+    <!-- HEADER -->
+    <header class="w-full py-6 px-4 text-center" style="background: linear-gradient(180deg, rgba(0,255,255,0.08) 0%, transparent 100%);">
+     <h1 id="systemTitle" class="text-4xl font-black neon-text mb-2" style="font-family: 'Orbitron', 'Noto Sans TC', sans-serif; font-size: 48px;">系統提示</h1>
+     <p class="text-2xl font-bold" style="color: rgba(255,255,255,0.9); font-size: 28px;"><span id="playerDisplay" style="color: #00ffff; text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff;">覺醒者</span> 已覺醒為準國中生守護者</p>
+    </header><!-- STATUS -->
+    <section class="w-full px-4 py-4 max-w-5xl mx-auto">
+     <div class="glass-panel rounded-xl p-6">
+      <div class="grid grid-cols-3 gap-4">
+       <div class="text-center p-4 rounded-lg" style="background: rgba(0,255,255,0.05); border: 1px solid rgba(0,255,255,0.15);">
+        <p id="stat1" class="text-3xl font-black neon-text" style="font-family: 'Orbitron', sans-serif;">0</p>
+        <p class="text-sm mt-2" style="color: rgba(255,255,255,0.5);">適性輔導</p>
+       </div>
+       <div class="text-center p-4 rounded-lg" style="background: rgba(75,0,130,0.15); border: 1px solid rgba(75,0,130,0.3);">
+        <p id="stat2" class="text-3xl font-black" style="color: #c084fc;">0</p>
+        <p class="text-sm mt-2" style="color: rgba(255,255,255,0.5);">多元學習</p>
+       </div>
+       <div class="text-center p-4 rounded-lg" style="background: rgba(251,191,36,0.05); border: 1px solid rgba(251,191,36,0.2);">
+        <p id="stat3" class="text-3xl font-black gold-text">0</p>
+        <p class="text-sm mt-2" style="color: rgba(255,255,255,0.5);">教育會考</p>
+       </div>
+      </div>
+      <div class="mt-6 p-4 rounded-lg text-center" style="background: linear-gradient(135deg, rgba(0,255,255,0.1), rgba(192,132,252,0.1)); border: 2px solid rgba(0,255,255,0.3);">
+       <p class="text-xs tracking-widest mb-2" style="color: rgba(0,255,255,0.6); font-family: 'Orbitron', sans-serif; font-size: 24px;">總積分</p>
+       <p id="totalScore" class="text-4xl font-black neon-text" style="font-family: 'Orbitron', sans-serif;">0</p>
+      </div>
+     </div>
+    </section><!-- TABS -->
+    <nav class="w-full px-4 max-w-5xl mx-auto flex gap-2 mb-6 flex-wrap">
+     <button class="tab-btn active" onclick="switchTab('skill1-panel')">🎯 適性輔導</button> <button class="tab-btn" onclick="switchTab('skill2-panel')">🧬 多元學習</button> <button class="tab-btn" onclick="switchTab('skill3-panel')">⭐ 教育會考</button> <button class="tab-btn" onclick="switchTab('details-panel')">🏛️ 副本對應表</button> <button class="tab-btn" onclick="switchTab('quest-panel')">🗺️ 闖關任務</button>
+    </nav><!-- PANELS -->
+    <div class="w-full px-4 max-w-5xl mx-auto pb-12" style="margin-right: 420px;">
+     <!-- SKILL 1: 適性輔導 -->
+     <div id="skill1-panel" class="tab-panel active"><div class="bg-fixed">
+  <div class="bg-grid"></div>
+  <div class="bg-glow"></div>
+  <canvas id="particles"></canvas>
+</div>
+      <div class="skill-card">
+       <h2 class="text-5xl font-bold neon-text mb-8" style="font-family: 'Orbitron', 'Noto Sans TC', sans-serif; font-size: 48px;">🎯 適性輔導 (32分)</h2><!-- 畢業資格 -->
+       <div class="mb-6">
+        <h3 class="font-bold neon-text mb-4" style="font-size: 36px;">📋 畢業資格 (6分)</h3><label class="option-label" id="grad_6"> <input type="radio" name="graduation" value="6" onchange="updateSkill1()"> <span class="option-text">✅ 畢業</span> <span class="ml-auto text-sm neon-text">+6 分</span> </label> <label class="option-label" id="grad_2"> <input type="radio" name="graduation" value="2" onchange="updateSkill1()"> <span class="option-text">🔶 修業</span> <span class="ml-auto text-sm neon-text">+2 分</span> </label> <label class="option-label" id="grad_0"> <input type="radio" name="graduation" value="0" onchange="updateSkill1()"> <span class="option-text">❌ 未畢業</span> <span class="ml-auto text-sm neon-text">+0 分</span> </label>
+        <div class="score-box">
+         <div class="score-label" style="font-size: 24px;">
+          畢業資格:
+         </div>
+         <div class="score-value" style="font-size: 24px;"><span id="s1_grad">0</span> / 6 分
+         </div>
+        </div>
+       </div><!-- 就近入學 -->
+       <div class="mb-6">
+        <h3 class="font-bold neon-text mb-4" style="font-size: 36px;">🗺️ 就近入學 (5分)</h3><label class="option-label" id="prox_5"> <input type="radio" name="proximity" value="5" onchange="updateSkill1()"> <span class="option-text">✅ 桃連區</span> <span class="ml-auto text-sm neon-text">+5 分</span> </label> <label class="option-label" id="prox_0"> <input type="radio" name="proximity" value="0" onchange="updateSkill1()"> <span class="option-text">🏙️ 他區</span> <span class="ml-auto text-sm neon-text">+0 分</span> </label>
+        <div class="score-box">
+         <div class="score-label" style="font-size: 24px;">
+          就近入學:
+         </div>
+         <div class="score-value" style="font-size: 24px;"><span id="s1_prox">0</span> / 5 分
+         </div>
+        </div>
+       </div><!-- 生涯規劃 -->
+       <div class="mb-6">
+        <h3 class="font-bold neon-text mb-4" style="font-size: 36px;">📚 生涯規劃 (6分)</h3>
+        <p style="font-size: 24px; color: rgba(255,255,255,0.6); margin-bottom: 10px;">需包含: (1)家長意見、(2)導師意見、(3)輔導教師意見</p>
+        <div class="input-group" style="padding: 8px;">
+         <label style="font-size: 24px; display: block; margin-bottom: 6px; color: #00ffff;">👨‍👩‍👧 家長意見</label> <select id="career_parent" onchange="updateSkill1()" style="width: 50%; font-size: 24px;"> <option value="">選擇路徑</option> <option value="hs">🎓 普通高中</option> <option value="chs">🎓 綜合高中</option> <option value="th">🎓 技術高中</option> </select>
+        </div>
+        <div class="input-group" style="padding: 8px;">
+         <label style="font-size: 24px; display: block; margin-bottom: 6px; color: #00ffff;">👨‍🏫 導師意見</label> <select id="career_mentor" onchange="updateSkill1()" style="width: 50%; font-size: 24px;"> <option value="">選擇路徑</option> <option value="hs">🎓 普通高中</option> <option value="chs">🎓 綜合高中</option> <option value="th">🎓 技術高中</option> </select>
+        </div>
+        <div class="input-group" style="padding: 8px;">
+         <label style="font-size: 24px; display: block; margin-bottom: 6px; color: #00ffff;">👩‍🦰 輔導教師意見</label> <select id="career_counselor" onchange="updateSkill1()" style="width: 50%; font-size: 24px;"> <option value="">選擇路徑</option> <option value="hs">🎓 普通高中</option> <option value="chs">🎓 綜合高中</option> <option value="th">🎓 技術高中</option> </select>
+        </div>
+        <div class="score-box" style="padding: 10px;">
+         <div class="score-label" style="font-size: 24px;">
+          生涯規劃: <span id="s1_career">0</span> / 6 分
+         </div>
+         <div class="score-label" id="s1_career_status" style="margin-top: 4px; font-size: 24px;">
+          選擇三項意見
+         </div>
+        </div>
+       </div><!-- 志願序 -->
+       <div class="mb-6">
+        <h3 class="font-bold neon-text mb-4" style="font-size: 36px;">📝 志願序積分 (15分)</h3>
+        <div class="input-group" style="padding: 8px;">
+         <label style="font-size: 24px; display: block; margin-bottom: 6px; color: #00ffff;">志願序位置</label> <select id="s1_wish_select" onchange="updateSkill1()" style="width: 50%; font-size: 24px;"> <option value="">志願卡</option> <option value="15">第1-3志願 (15分)</option> <option value="12">第4-6志願 (12分)</option> <option value="9">第7-9志願 (9分)</option> <option value="6">第10-12志願 (6分)</option> <option value="3">第13志願以後 (3分)</option> </select>
+        </div>
+        <div class="score-box" style="padding: 10px;">
+         <div class="score-label" style="font-size: 24px;">
+          志願序積分: <span id="s1_wish_score">0</span> / 15 分
+         </div>
+        </div>
+       </div>
+       <div class="score-box" style="background: rgba(0,255,255,0.15);">
+        <div class="score-label" style="font-size: 24px;">
+         本項總分:
+        </div>
+        <div class="score-value"><span id="skill1_total">0</span> / 32 分
+        </div>
+       </div>
+      </div>
+     </div><!-- SKILL 2: 多元學習 -->
+     <div id="skill2-panel" class="tab-panel">
+      <div class="skill-card" style="border-color: rgba(192,132,252,0.3);">
+       <h2 class="text-5xl font-bold" style="color: #c084fc; font-family: 'Orbitron', 'Noto Sans TC', sans-serif; margin-bottom: 32px; font-size: 48px;">🧬 多元學習 (35分)</h2><!-- 均衡學習 -->
+       <div class="mb-6">
+        <h3 style="color: #c084fc; font-weight: bold; margin-bottom: 12px; font-size: 36px;">⚖️ 均衡學習 (最多9分)</h3>
+        <p style="font-size: 24px; color: rgba(255,255,255,0.5); margin-bottom: 8px;">健康與體育、藝術、綜合活動、科技各3分</p><label class="option-label" id="bal_pe" style="padding: 10px;"> <input type="checkbox" id="s2_bal_pe" onchange="updateSkill2()"> <span class="checkbox-label" style="font-size: 24px;">💪 健康與體育</span> <span class="ml-auto text-sm" style="color: #c084fc; font-size: 24px;">+3 分</span> </label> <label class="option-label" id="bal_art" style="padding: 10px;"> <input type="checkbox" id="s2_bal_art" onchange="updateSkill2()"> <span class="checkbox-label" style="font-size: 24px;">🎨 藝術</span> <span class="ml-auto text-sm" style="color: #c084fc; font-size: 24px;">+3 分</span> </label> <label class="option-label" id="bal_integrated" style="padding: 10px;"> <input type="checkbox" id="s2_bal_integrated" onchange="updateSkill2()"> <span class="checkbox-label" style="font-size: 24px;">🌍 綜合活動</span> <span class="ml-auto text-sm" style="color: #c084fc; font-size: 24px;">+3 分</span> </label> <label class="option-label" id="bal_tech" style="padding: 10px;"> <input type="checkbox" id="s2_bal_tech" onchange="updateSkill2()"> <span class="checkbox-label" style="font-size: 24px;">💻 科技</span> <span class="ml-auto text-sm" style="color: #c084fc; font-size: 24px;">+3 分</span> </label>
+        <div class="score-box" style="background: rgba(192,132,252,0.1); border-color: rgba(192,132,252,0.2); padding: 10px;">
+         <div class="score-label" style="font-size: 24px;">
+          均衡學習: <span id="s2_bal">0</span> / 9 分
+         </div>
+        </div>
+       </div><!-- 品德 -->
+       <div class="mb-6">
+        <h3 style="color: #c084fc; font-weight: bold; margin-bottom: 12px; font-size: 36px;">🤜🤛品德表現 (最多10分)</h3>
+        <div class="input-group" style="padding: 8px;">
+         <label style="font-size: 24px; display: block; margin-bottom: 6px; color: #c084fc;">無記過 (小過=0 &amp; 大過=0 &amp; 警告&lt;3)</label> <button id="moralBtn" onclick="toggleMoral()" style="padding: 6px 10px; border: 1px solid rgba(0,255,255,0.3); background: rgba(0,255,255,0.1); color: #00ffff; border-radius: 4px; cursor: pointer; font-size: 24px; width: 100%;">未達成</button>
+        </div>
+        <div class="input-group" style="padding: 8px;">
+         <label style="font-size: 24px; display: block; margin-bottom: 6px; color: #c084fc;">大功 (每次+4.5分)</label> <input type="number" id="s2_major_merit" value="0" min="0" onchange="updateSkill2()" style="width: 50%; font-size: 24px; padding: 6px;">
+        </div>
+        <div class="input-group" style="padding: 8px;">
+         <label style="font-size: 24px; display: block; margin-bottom: 6px; color: #c084fc;">小功 (每次+1.5分)</label> <input type="number" id="s2_merit" value="0" min="0" onchange="updateSkill2()" style="width: 50%; font-size: 24px; padding: 6px;">
+        </div>
+        <div class="input-group" style="padding: 8px;">
+         <label style="font-size:24px; display: block; margin-bottom: 6px; color: #c084fc;">嘉獎 (每次+0.5分)</label> <input type="number" id="s2_commendation" value="0" min="0" onchange="updateSkill2()" style="width: 50%; font-size: 24px; padding: 6px;">
+        </div>
+        <div class="input-group" style="padding: 8px;">
+         <label style="font-size: 24px; display: block; margin-bottom: 6px; color: #c084fc;">小過 (每次-1.5分)</label> <input type="number" id="s2_minor_demerit" value="0" min="0" onchange="updateSkill2()" style="width: 50%; font-size: 24px; padding: 6px;">
+        </div>
+        <div class="input-group" style="padding: 8px;">
+         <label style="font-size: 24px; display: block; margin-bottom: 6px; color: #c084fc;">大過 (每次-4.5分)</label> <input type="number" id="s2_major_demerit" value="0" min="0" onchange="updateSkill2()" style="width: 50%; font-size: 24px; padding: 6px;">
+        </div>
+        <div class="input-group" style="padding: 8px;">
+         <label style="font-size: 24px; display: block; margin-bottom: 6px; color: #c084fc;">警告 (每次-0.5分，3次以上=未達成)</label> <input type="number" id="s2_warning" value="0" min="0" onchange="updateSkill2()" style="width: 50%; font-size: 24px; padding: 6px;">
+        </div>
+        <div class="score-box" style="background: rgba(192,132,252,0.1); border-color: rgba(192,132,252,0.2); padding: 10px;">
+         <div class="score-label" style="font-size: 24px;">
+          品德表現: <span id="s2_moral">0</span> / 10 分
+         </div>
+        </div>
+       </div><!-- 服務 -->
+       <div class="mb-6">
+        <h3 style="color: #c084fc; font-weight: bold; margin-bottom: 24px; font-size: 36px;">🤝 服務表現 (最多10分)</h3>
+        <div class="input-group" style="padding: 8px;">
+         <label style="font-size: 24px; display: block; margin-bottom: 6px; color: #c084fc;">幹部學期數 (每學期2分, 最高4分)</label> <input type="number" id="s2_leader_semesters" value="0" min="0" max="6" onchange="updateSkill2()" style="width: 50%; font-size: 24px; padding: 6px;">
+        </div>
+        <div class="input-group" style="padding: 8px;">
+         <label style="font-size: 24px; display: block; margin-bottom: 6px; color: #c084fc;">志願服務時數 (每小時0.3分)</label> <input type="number" id="s2_service_hours" value="0" min="0" onchange="updateSkill2()" style="width: 50%; font-size: 24px; padding: 6px;">
+        </div>
+        <div class="score-box" style="background: rgba(192,132,252,0.1); border-color: rgba(192,132,252,0.2); padding: 10px;">
+         <div class="score-label" style="font-size: 24px;">
+          服務表現: <span id="s2_service">0</span> / 10 分
+         </div>
+        </div>
+       </div><!-- 才藝 -->
+       <div class="mb-6">
+        <h3 style="color: #c084fc; font-weight: bold; margin-bottom: 12px; font-size: 36px;">🎭 才藝表現 (最多5分)</h3>
+        <div class="input-group" style="padding: 8px;">
+         <label style="font-size: 24px; display: block; margin-bottom: 6px; color: #c084fc;">積分 (最多5分)</label> <input type="number" id="s2_talent" value="0" min="0" max="5" onchange="updateSkill2()" style="width: 50%; font-size: 24px; padding: 6px;">
+        </div>
+        <div class="score-box" style="background: rgba(192,132,252,0.1); border-color: rgba(192,132,252,0.2); padding: 10px;">
+         <div class="score-label" style="font-size: 24px;">
+          才藝表現: <span id="s2_talent_score">0</span> / 5 分
+         </div>
+        </div>
+       </div><!-- 體適能 -->
+       <div class="mb-6">
+        <h3 style="color: #c084fc; font-weight: bold; margin-bottom: 12px; font-size: 36px;">💪 體適能 (最多6分)</h3><label class="option-label" id="fit_yes" style="padding: 10px;"> <input type="radio" name="s2_fitness" value="6" onchange="updateSkill2()"> <span class="checkbox-label" style="font-size: 24px;">✅ 已達門檻</span> <span class="ml-auto text-sm" style="color: #c084fc; font-size: 24px;">+6 分</span> </label> <label class="option-label" id="fit_no" style="padding: 10px;"> <input type="radio" name="s2_fitness" value="0" onchange="updateSkill2()"> <span class="checkbox-label" style="font-size: 24px;">❌ 未達門檻</span> <span class="ml-auto text-sm" style="color: #c084fc; font-size: 24px;">+0 分</span> </label>
+        <div class="score-box" style="background: rgba(192,132,252,0.1); border-color: rgba(192,132,252,0.2); padding: 10px;">
+         <div class="score-label" style="font-size: 24px;">
+          體適能: <span id="s2_fitness">0</span> / 6 分
+         </div>
+        </div>
+       </div><!-- 本土語 -->
+       <div class="mb-6">
+        <h3 style="color: #c084fc; font-weight: bold; margin-bottom: 12px; font-size: 36px;">🗣️ 本土語認證 (最多2分)</h3><label class="option-label" id="lang_yes" style="padding: 10px;"> <input type="radio" name="s2_local_lang" value="2" onchange="updateSkill2()"> <span class="checkbox-label" style="font-size: 24px;">✅ 已通過認證</span> <span class="ml-auto text-sm" style="color: #c084fc; font-size: 24px;">+2 分</span> </label> <label class="option-label" id="lang_no" style="padding: 10px;"> <input type="radio" name="s2_local_lang" value="0" onchange="updateSkill2()"> <span class="checkbox-label" style="font-size: 24px;">❌ 未通過認證</span> <span class="ml-auto text-sm" style="color: #c084fc; font-size: 24px;">+0 分</span> </label>
+        <div class="score-box" style="background: rgba(192,132,252,0.1); border-color: rgba(192,132,252,0.2); padding: 10px;">
+         <div class="score-label" style="font-size: 24px;">
+          本土語: <span id="s2_local_lang_score">0</span> / 2 分
+         </div>
+        </div>
+       </div>
+       <div class="score-box" style="background: rgba(192,132,252,0.15);">
+        <div class="score-label" style="font-size: 24px;">
+         本項總分:
+        </div>
+        <div class="score-value"><span id="skill2_total">0</span> / 35 分
+        </div>
+       </div>
+      </div>
+     </div><!-- SKILL 3: 教育會考 -->
+     <div id="skill3-panel" class="tab-panel">
+      <div class="skill-card" style="border-color: rgba(251,191,36,0.3);">
+       <h2 class="text-5xl font-bold gold-text mb-8" style="font-family: 'Orbitron', 'Noto Sans TC', sans-serif; font-size: 48px;">⭐ 教育會考 (33分)</h2>
+       <p style="color: rgba(255,107,53,7); margin-bottom: 28px; font-size: 36px;">📚 五科等級 &amp; 寫作測驗</p>
+       <div class="input-group" style="padding: 8px;">
+        <label style="font-size: 24px; display: block; margin-bottom: 6px; color: #fbbf24;">國文</label> <select id="s3_chinese" onchange="updateSkill3()" style="width: 50%; font-size: 24px;"> <option value="">選擇</option> <option value="6">A 級 (6分)</option> <option value="4">B 級 (4分)</option> <option value="2">C 級 (2分)</option> </select>
+       </div>
+       <div class="input-group" style="padding: 8px;">
+        <label style="font-size: 24px; display: block; margin-bottom: 6px; color: #fbbf24;">英文</label> <select id="s3_english" onchange="updateSkill3()" style="width: 50%; font-size: 24px;"> <option value="">選擇</option> <option value="6">A 級 (6分)</option> <option value="4">B 級 (4分)</option> <option value="2">C 級 (2分)</option> </select>
+       </div>
+       <div class="input-group" style="padding: 8px;">
+        <label style="font-size: 24px; display: block; margin-bottom: 6px; color: #fbbf24;">數學</label> <select id="s3_math" onchange="updateSkill3()" style="width: 50%; font-size: 24px;"> <option value="">選擇</option> <option value="6">A 級 (6分)</option> <option value="4">B 級 (4分)</option> <option value="2">C 級 (2分)</option> </select>
+       </div>
+       <div class="input-group" style="padding: 8px;">
+        <label style="font-size: 24px; display: block; margin-bottom: 6px; color: #fbbf24;">自然</label> <select id="s3_science" onchange="updateSkill3()" style="width: 50%; font-size: 24px;"> <option value="">選擇</option> <option value="6">A 級 (6分)</option> <option value="4">B 級 (4分)</option> <option value="2">C 級 (2分)</option> </select>
+       </div>
+       <div class="input-group" style="padding: 8px;">
+        <label style="font-size: 24px; display: block; margin-bottom: 6px; color: #fbbf24;">社會</label> <select id="s3_social" onchange="updateSkill3()" style="width: 50%; font-size: 24px;"> <option value="">選擇</option> <option value="6">A 級 (6分)</option> <option value="4">B 級 (4分)</option> <option value="2">C 級 (2分)</option> </select>
+       </div>
+       <div class="input-group" style="padding: 8px;">
+        <label style="font-size: 24px; display: block; margin-bottom: 6px; color: #fbbf24;">寫作測驗</label> <select id="s3_writing" onchange="updateSkill3()" style="width: 50%; font-size: 24px;"> <option value="">選擇</option> <option value="3">6級 (3分)</option> <option value="3">5級 (3分)</option> <option value="3">4級 (3分)</option> <option value="2">3級 (2分)</option> <option value="2">2級 (2分)</option> <option value="1">1級 (1分)</option> </select>
+       </div>
+       <div class="score-box" style="background: rgba(251,191,36,0.15);">
+        <div class="score-label" style="font-size: 24px;">
+         本項總分:
+        </div>
+        <div class="score-value"><span id="skill3_total">0</span> / 33 分
+        </div>
+       </div>
+      </div>
+     </div><!-- DETAILS: RANK SYSTEM -->
+     <div id="details-panel" class="tab-panel">
+      <div class="skill-card"><!-- Header with title and rank display side by side -->
+       <h2 class="text-6xl font-bold neon-text" style="font-family: 'Orbitron', 'Noto Sans TC', sans-serif; margin-bottom: 28px;">🏆 獵人等級與副本（校系）對應表</h2><!-- Rank Cards Grid (6x1 horizontal layout) -->
+       <div style="display: grid; grid-template-columns: 1fr; gap: 12px; margin-bottom: 24px;">
+        <!-- S RANK -->
+        <div class="rank-card" id="rank-S" onclick="selectRank(this, 'S')" style="padding: 32px; cursor: pointer;">
+         <div style="display: grid; grid-template-columns: 180px 1fr; gap: 24px; align-items: start;">
+          <div style="font-size: 140px; font-weight: 900; font-family: 'Orbitron', sans-serif; text-shadow: 0 0 20px rgba(0,255,255,0.8); color: #00ffff; text-align: center;">
+           S
+          </div>
+          <div>
+           <div class="rank-title glow-title" style="font-size: 36px;">
+            【S 級獵人】國家級戰力
+           </div>
+           <div class="rank-range glow-range" style="font-size: 32px;">
+            📊 總積分：100 分 (滿分)
+           </div>
+           <div class="rank-exam glow-exam" style="font-size: 32px;">
+            🎓 會考標示：武陵高中需 5A7+  或 5A (精熟)
+           </div>
+           <div class="rank-schools glow-schools" style="font-size: 32px;">
+            🏫 對應地下城：武陵高中、中壢高中 (頂尖副本)
+           </div>
+           <div class="rank-desc glow-desc" style="font-size: 28px;">
+            「您已站在獵人的頂端，全桃園的地下城門扉皆為您敞開，擁有絕對優先選擇權。」
+           </div>
+          </div>
+         </div>
+        </div><!-- A RANK -->
+        <div class="rank-card" id="rank-A" onclick="selectRank(this, 'A')" style="padding: 32px; cursor: pointer;">
+         <div style="display: grid; grid-template-columns: 180px 1fr; gap: 24px; align-items: start;">
+          <div style="font-size: 140px; font-weight: 900; font-family: 'Orbitron', sans-serif; text-shadow: 0 0 20px rgba(0,255,255,0.8); color: #00ffff; text-align: center;">
+           A
+          </div>
+          <div>
+           <div class="rank-title glow-title" style="font-size: 36px;">
+            【A 級獵人】精銳部隊
+           </div>
+           <div class="rank-range glow-range" style="font-size: 32px;">
+            📊 總積分：94 ~ 98 分
+           </div>
+           <div class="rank-exam glow-exam" style="font-size: 32px;">
+            🎓 會考標示：4A1B ~ 5A (精熟)
+           </div>
+           <div class="rank-schools glow-schools" style="font-size: 32px;">
+            🏫 對應地下城：內壢高中、復旦中學高中部
+           </div>
+           <div class="rank-desc glow-desc" style="font-size: 28px;">
+            「實力極為強悍，是各家公立高中的核心招募對象。只要志願序策略正確，通關成功率極高。」
+           </div>
+          </div>
+         </div>
+        </div><!-- B RANK -->
+        <div class="rank-card" id="rank-B" onclick="selectRank(this, 'B')" style="padding: 32px; cursor: pointer;">
+         <div style="display: grid; grid-template-columns: 180px 1fr; gap: 24px; align-items: start;">
+          <div style="font-size: 140px; font-weight: 900; font-family: 'Orbitron', sans-serif; text-shadow: 0 0 20px rgba(0,255,255,0.8); color: #00ffff; text-align: center;">
+           B
+          </div>
+          <div>
+           <div class="rank-title glow-title" style="font-size: 36px;">
+            【B 級獵人】中堅份子
+           </div>
+           <div class="rank-range glow-range" style="font-size: 32px;">
+            📊 總積分：80 ~ 92 分
+           </div>
+           <div class="rank-exam glow-exam" style="font-size: 32px;">
+            🎓 會考標示：1A4B ~ 3A2B
+           </div>
+           <div class="rank-schools glow-schools" style="font-size: 32px;">
+            🏫 對應地下城：平鎮高中、大園高中、熱門公立高職暨普通科與優質私立中學暨普通科
+           </div>
+           <div class="rank-desc glow-desc" style="font-size: 28px;">
+            「具備穩定的作戰能力，建議強化『多元學習』積分以補足戰力，並善用『就近入學』加成。」
+           </div>
+          </div>
+         </div>
+        </div><!-- C RANK -->
+        <div class="rank-card" id="rank-C" onclick="selectRank(this, 'C')" style="padding: 32px; cursor: pointer;">
+         <div style="display: grid; grid-template-columns: 180px 1fr; gap: 24px; align-items: start;">
+          <div style="font-size: 140px; font-weight: 900; font-family: 'Orbitron', sans-serif; text-shadow: 0 0 20px rgba(0,255,255,0.8); color: #00ffff; text-align: center;">
+           C
+          </div>
+          <div>
+           <div class="rank-title glow-title" style="font-size: 36px;">
+            【C 級獵人】潛力新秀
+           </div>
+           <div class="rank-range glow-range" style="font-size: 32px;">
+            📊 總積分：70 ~ 78 分
+           </div>
+           <div class="rank-exam glow-exam" style="font-size: 32px;">
+            🎓 會考標示：5B (基礎)
+           </div>
+           <div class="rank-schools glow-schools" style="font-size: 32px;">
+            🏫 對應地下城：楊梅高中、大溪高中、地區型公立高中與優質私立高中職
+           </div>
+           <div class="rank-desc glow-desc" style="font-size: 28px;">
+            「已覺醒並具備基本戰力，需精確計算『適性輔導』積分，確保在超額比序中取得優勢。」
+           </div>
+          </div>
+         </div>
+        </div><!-- D RANK -->
+        <div class="rank-card" id="rank-D" onclick="selectRank(this, 'D')" style="padding: 32px; cursor: pointer;">
+         <div style="display: grid; grid-template-columns: 180px 1fr; gap: 24px; align-items: start;">
+          <div style="font-size: 140px; font-weight: 900; font-family: 'Orbitron', sans-serif; text-shadow: 0 0 20px rgba(0,255,255,0.8); color: #00ffff; text-align: center;">
+           D
+          </div>
+          <div>
+           <div class="rank-title glow-title" style="font-size: 36px;">
+            【D 級獵人】潛力覺醒者
+           </div>
+           <div class="rank-range glow-range" style="font-size: 32px;">
+            📊 總積分：62 ~ 68 分
+           </div>
+           <div class="rank-exam glow-exam" style="font-size: 32px;">
+            🎓 會考標示：2B3C ~ 4B1C (或 5B 但多元學習未滿分)
+           </div>
+           <div class="rank-schools glow-schools" style="font-size: 32px;">
+            🏫 對應地下城：區域性私立高中職、進修學校、部分產學合作班
+           </div>
+           <div class="rank-desc glow-desc" style="font-size: 28px;">
+            「您已跨越覺醒門檻，正式踏入獵人世界。雖然核心輸出（會考）尚在冷卻，但若能強化『二轉職業技能（技職特長）』，未來仍有機會在特定領域晉升為高階獵人。」
+           </div>
+          </div>
+         </div>
+        </div><!-- E RANK -->
+        <div class="rank-card" id="rank-E" onclick="selectRank(this, 'E')" style="padding: 32px; cursor: pointer;">
+         <div style="display: grid; grid-template-columns: 180px 1fr; gap: 24px; align-items: start;">
+          <div style="font-size: 140px; font-weight: 900; font-family: 'Orbitron', sans-serif; text-shadow: 0 0 20px rgba(0,255,255,0.8); color: #00ffff; text-align: center;">
+           E
+          </div>
+          <div>
+           <div class="rank-title glow-title" style="font-size: 36px;">
+            【E 級獵人】覺醒初期
+           </div>
+           <div class="rank-range glow-range" style="font-size: 32px;">
+            📊 總積分：60 分以下
+           </div>
+           <div class="rank-exam glow-exam" style="font-size: 32px;">
+            🎓 會考標示：5C 或 部分 B
+           </div>
+           <div class="rank-schools glow-schools" style="font-size: 32px;">
+            🏫 對應地下城：技職教育、實用技能班
+           </div>
+           <div class="rank-desc glow-desc" style="font-size: 28px;">
+            「尚在成長階段，建議往『特殊技能樹（技藝班/體育班）』發展，發掘隱藏的二轉職業。」
+           </div>
+          </div>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div><!-- QUESTS -->
+     <div id="quest-panel" class="tab-panel">
+    <head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>會考比序副本挑戰</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap');
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{min-height:100%;background:#050b18;font-family:'Noto Sans TC',sans-serif;color:#e0eeff;}
+.wrap{max-width:500px;margin:0 auto;padding:0 0 60px;}
+.bg-fixed{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+.bg-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(80,160,255,.06)1px,transparent 1px),linear-gradient(90deg,rgba(80,160,255,.06)1px,transparent 1px);background-size:36px 36px;}
+.bg-glow{position:absolute;width:600px;height:400px;background:radial-gradient(ellipse,rgba(20,60,200,.18)0%,transparent 70%);top:-100px;left:50%;transform:translateX(-50%);}
+canvas#particles{position:absolute;inset:0;width:100%;height:100%;}
+.screen{position:relative;z-index:1;padding:28px 18px;display:none;}
+.screen.active{display:block;}
+
+/* LOGIN */
+.system-badge{display:inline-block;font-size:14px;letter-spacing:.18em;color:#5aa0ff;border:1px solid rgba(90,160,255,.4);padding:5px 16px;border-radius:2px;margin-bottom:14px;}
+.logo-title{font-size:32px;font-weight:900;color:#e8f4ff;letter-spacing:.1em;text-shadow:0 0 24px rgba(90,160,255,.6);}
+.logo-sub{font-size:15px;color:#3a6a9a;letter-spacing:.1em;margin-top:6px;}
+.login-avatar{width:110px;height:110px;border-radius:50%;margin:0 auto 24px;border:2px solid rgba(90,160,255,.5);background:#0a1830;display:flex;align-items:center;justify-content:center;font-size:52px;}
+.login-label{font-size:16px;color:#4a7ab5;margin-bottom:10px;letter-spacing:.05em;}
+.login-input{width:100%;padding:15px 16px;background:rgba(8,18,50,.8);border:1px solid rgba(90,160,255,.3);border-radius:6px;color:#e0eeff;font-size:18px;font-family:'Noto Sans TC',sans-serif;outline:none;transition:.2s;}
+.login-input:focus{border-color:rgba(90,160,255,.7);}
+.login-btn{width:100%;padding:16px;margin-top:18px;background:rgba(20,60,160,.5);color:#5aa0ff;border:1px solid rgba(90,160,255,.5);border-radius:6px;font-size:18px;font-weight:700;letter-spacing:.15em;font-family:'Noto Sans TC',sans-serif;cursor:pointer;text-shadow:0 0 8px rgba(90,160,255,.4);}
+.login-desc{font-size:15px;color:#2a5080;text-align:center;margin-top:16px;line-height:1.8;}
+
+/* BOSS INTRO */
+.boss-avatar-wrap{position:relative;width:130px;height:130px;margin:0 auto 18px;}
+.boss-avatar{width:130px;height:130px;border-radius:50%;background:#0a1830;border:2px solid rgba(200,60,60,.5);display:flex;align-items:center;justify-content:center;font-size:60px;}
+.boss-rank-badge{position:absolute;bottom:2px;right:2px;background:#0e0e2a;border:1px solid rgba(200,80,80,.6);color:#e06060;font-size:13px;font-weight:700;padding:3px 9px;border-radius:10px;letter-spacing:.05em;}
+.boss-name{font-size:26px;font-weight:900;letter-spacing:.08em;text-shadow:0 0 16px rgba(200,80,80,.5);margin-bottom:6px;}
+.boss-title{font-size:15px;color:#7a4a4a;letter-spacing:.1em;margin-bottom:18px;}
+.boss-desc{font-size:16px;color:#6a7a9a;line-height:2;margin-bottom:28px;background:rgba(5,12,30,.8);border:1px solid rgba(90,160,255,.1);border-radius:6px;padding:16px 18px;}
+.boss-desc b{color:#a0d0ff;}
+.enter-btn{width:100%;padding:16px;background:rgba(120,20,20,.4);color:#e06060;border:1px solid rgba(200,60,60,.4);border-radius:6px;font-size:17px;font-weight:700;letter-spacing:.15em;font-family:'Noto Sans TC',sans-serif;cursor:pointer;}
+
+/* GAME HEADER */
+.game-header{display:flex;align-items:center;gap:12px;margin-bottom:20px;padding:14px 16px;background:rgba(5,12,30,.8);border:1px solid rgba(90,160,255,.15);border-radius:8px;}
+.player-avatar{width:52px;height:52px;border-radius:50%;border:1px solid rgba(90,160,255,.4);background:#0a1830;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;}
+.player-name-h{font-size:17px;font-weight:700;color:#a0d0ff;}
+.player-rank-h{font-size:13px;color:#3a6a9a;letter-spacing:.08em;margin-top:3px;}
+.prog-bar{flex:1;height:4px;background:rgba(90,160,255,.1);border-radius:2px;overflow:hidden;}
+.prog-fill{height:100%;background:linear-gradient(90deg,#1e50c8,#5aa0ff);transition:width .5s;}
+
+/* TABS */
+.level-tabs{display:flex;gap:6px;margin-bottom:18px;}
+.tab{flex:1;padding:11px 4px;border:1px solid rgba(90,160,255,.2);border-radius:5px;background:rgba(10,25,60,.6);cursor:pointer;font-size:14px;text-align:center;color:#3a6a9a;font-family:'Noto Sans TC',sans-serif;line-height:1.5;}
+.tab.active{background:rgba(30,80,200,.3);color:#a0d0ff;border-color:rgba(90,160,255,.6);}
+.tab.cleared{color:#3a9a6a;border-color:rgba(50,180,100,.4);}
+
+/* QUEST CARD */
+.quest-card{background:rgba(8,18,45,.9);border:1px solid rgba(90,160,255,.2);border-radius:10px;padding:20px;margin-bottom:16px;position:relative;overflow:hidden;}
+.quest-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(90,160,255,.5),transparent);}
+
+/* VS */
+.vs-row{display:flex;align-items:center;gap:12px;margin-bottom:18px;}
+.combatant{flex:1;text-align:center;}
+.combatant-avatar{width:76px;height:76px;border-radius:50%;margin:0 auto 8px;border:2px solid rgba(90,160,255,.4);background:#0a1830;display:flex;align-items:center;justify-content:center;font-size:34px;}
+.combatant-avatar.boss-side{border-color:rgba(200,60,60,.5);}
+.combatant-name{font-size:15px;font-weight:700;color:#a0c8ff;}
+.combatant-name.boss-color{color:#e0a0a0;}
+.vs-badge{font-size:28px;font-weight:900;color:#5aa0ff;text-shadow:0 0 12px rgba(90,160,255,.6);flex-shrink:0;}
+
+.rank-row{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.rank-badge{font-size:13px;font-weight:700;color:#5aa0ff;border:1px solid rgba(90,160,255,.5);padding:3px 10px;border-radius:2px;letter-spacing:.1em;}
+.quest-title{font-size:16px;font-weight:500;color:#90b8e0;}
+
+.scenario-box{background:rgba(5,12,30,.8);border-left:2px solid rgba(90,160,255,.4);padding:10px 12px;margin-bottom:14px;font-size:15px;color:#5a8ab0;line-height:1.8;border-radius:0 5px 5px 0;}
+.scenario-box b{color:#80b0d8;}
+
+/* SCORE TABLE */
+.score-table{width:100%;border-collapse:collapse;margin-bottom:14px;}
+.score-table th{font-size:14px;color:#2a5a80;padding:7px 6px;border-bottom:1px solid rgba(90,160,255,.1);text-align:center;letter-spacing:.05em;}
+.score-table td{padding:10px 6px;text-align:center;border-bottom:1px solid rgba(90,160,255,.05);color:#6a9abf;font-size:16px;}
+.score-table .lbl{text-align:left;color:#3a6a9a;font-size:14px;}
+.score-table .mono{font-size:16px;color:#88b8e0;font-weight:500;}
+.score-table .hl td{background:rgba(90,160,255,.07);}
+.score-table .win-cell{color:#5ae0a0 !important;font-weight:700;}
+
+/* QUESTION */
+.quest-q p{font-size:17px;color:#7aaad0;margin-bottom:12px;font-weight:500;}
+.choices{display:flex;gap:10px;}
+.choice-btn{flex:1;padding:15px 8px;border:1px solid rgba(90,160,255,.3);border-radius:6px;background:rgba(10,25,60,.5);cursor:pointer;font-size:16px;font-weight:700;color:#6a9abf;font-family:'Noto Sans TC',sans-serif;letter-spacing:.05em;transition:.2s;}
+.choice-btn:hover{background:rgba(30,70,160,.4);color:#a0d0ff;}
+.choice-btn.correct{background:rgba(20,80,50,.5);color:#5ae0a0;border-color:rgba(50,200,120,.5);}
+.choice-btn.wrong{background:rgba(80,15,15,.5);color:#e06060;border-color:rgba(200,60,60,.4);}
+.choice-btn:disabled{cursor:default;}
+
+/* FEEDBACK */
+.feedback{border-radius:6px;padding:14px 16px;font-size:15px;line-height:1.9;margin:12px 0;display:none;border-left:3px solid;}
+.feedback.show{display:block;}
+.feedback.success{background:rgba(15,60,35,.7);color:#60d0a0;border-color:rgba(50,200,120,.6);}
+.feedback.error{background:rgba(60,10,10,.7);color:#d08080;border-color:rgba(200,60,60,.5);}
+
+/* REASON BOX */
+.reason-box{margin-top:14px;padding:16px;border-radius:8px;background:rgba(10,30,80,.6);border:1px solid rgba(90,160,255,.35);text-align:center;}
+.reason-label{font-size:13px;color:#3a6a9a;letter-spacing:.12em;margin-bottom:8px;}
+.reason-text{font-size:19px;font-weight:900;color:#5aa0ff;letter-spacing:.06em;line-height:1.6;animation:reasonGlow 2.2s ease-in-out infinite;}
+@keyframes reasonGlow{0%,100%{text-shadow:0 0 10px rgba(90,160,255,.8),0 0 22px rgba(90,160,255,.4);}50%{text-shadow:0 0 22px rgba(90,160,255,1),0 0 44px rgba(90,160,255,.7),0 0 66px rgba(90,160,255,.3);}}
+
+.next-btn{width:100%;padding:15px;background:rgba(20,60,160,.4);color:#5aa0ff;border:1px solid rgba(90,160,255,.4);border-radius:6px;cursor:pointer;font-size:16px;font-weight:700;display:none;margin-top:12px;letter-spacing:.12em;font-family:'Noto Sans TC',sans-serif;}
+.next-btn.show{display:block;}
+
+/* CERTIFICATE */
+.cert-wrap{position:relative;z-index:1;padding:28px 18px 60px;}
+.cert-outer{border:2px solid rgba(90,160,255,.5);border-radius:12px;padding:6px;background:rgba(3,8,28,.97);box-shadow:0 0 50px rgba(90,160,255,.12);}
+.cert-inner{border:1px solid rgba(90,160,255,.25);border-radius:8px;padding:36px 22px;text-align:center;position:relative;overflow:hidden;}
+.cert-inner::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(90,160,255,.7),transparent);}
+.cert-inner::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(90,160,255,.7),transparent);}
+.cert-corner{position:absolute;width:26px;height:26px;border-color:rgba(90,160,255,.45);border-style:solid;}
+.cert-corner.tl{top:14px;left:14px;border-width:2px 0 0 2px;}
+.cert-corner.tr{top:14px;right:14px;border-width:2px 2px 0 0;}
+.cert-corner.bl{bottom:14px;left:14px;border-width:0 0 2px 2px;}
+.cert-corner.br{bottom:14px;right:14px;border-width:0 2px 2px 0;}
+.cert-sys{font-size:13px;color:#5aa0ff;letter-spacing:.22em;margin-bottom:12px;}
+.cert-title{font-size:22px;font-weight:900;color:#e8f4ff;letter-spacing:.12em;text-shadow:0 0 20px rgba(90,160,255,.5);margin-bottom:8px;}
+.cert-divider{display:flex;align-items:center;gap:10px;margin:16px 0;}
+.cert-divider-line{flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(90,160,255,.3));}
+.cert-divider-line.r{background:linear-gradient(90deg,rgba(90,160,255,.3),transparent);}
+.cert-player{font-size:28px;font-weight:900;color:#a0d0ff;letter-spacing:.1em;text-shadow:0 0 16px rgba(90,160,255,.6);margin:10px 0 4px;}
+.cert-player-sub{font-size:14px;color:#3a6a9a;letter-spacing:.1em;margin-bottom:20px;}
+.cert-rank{font-size:46px;font-weight:900;letter-spacing:.2em;animation:certGlow 2.5s ease-in-out infinite;}
+@keyframes certGlow{0%,100%{text-shadow:0 0 20px currentColor,0 0 40px currentColor;}50%{text-shadow:0 0 40px currentColor,0 0 80px currentColor,0 0 120px currentColor;}}
+.cert-rank.srank{color:#5aa0ff;}
+.cert-rank.arank{color:#a0d060;}
+.cert-rank.brank{color:#d0a040;}
+.cert-rank.frank{color:#d06060;}
+.cert-eval{font-size:24px;font-weight:700;margin-top:10px;letter-spacing:.15em;}
+.cert-eval.srank{color:#a0d0ff;text-shadow:0 0 12px rgba(90,160,255,.6);}
+.cert-eval.arank{color:#c0e880;text-shadow:0 0 12px rgba(160,208,96,.5);}
+.cert-eval.brank{color:#e0c060;text-shadow:0 0 12px rgba(208,160,64,.5);}
+.cert-eval.frank{color:#e08080;text-shadow:0 0 10px rgba(200,80,80,.5);}
+.cert-desc{font-size:14px;color:#4a7ab5;line-height:2;margin:20px 0;background:rgba(5,12,35,.7);border:1px solid rgba(90,160,255,.1);border-radius:6px;padding:16px;}
+.cert-desc b{color:#5aa0ff;}
+.cert-seal{font-size:52px;margin:16px 0;}
+.cert-date{font-size:13px;color:#2a4a70;letter-spacing:.08em;margin-top:6px;}
+.restart-btn{width:100%;padding:15px;background:rgba(20,60,160,.4);color:#5aa0ff;border:1px solid rgba(90,160,255,.4);border-radius:6px;cursor:pointer;font-size:16px;font-weight:700;letter-spacing:.12em;font-family:'Noto Sans TC',sans-serif;margin-top:16px;}
+</style>
+</head>
+<body>
+<div class="bg-fixed">
+  <div class="bg-grid"></div>
+  <div class="bg-glow"></div>
+  <canvas id="particles"></canvas>
+</div>
+
+<!-- LOGIN -->
+<div class="screen active"display: none>
+<div class="wrap" style="padding-top:50px;">
+  <div style="text-align:center;margin-bottom:36px;">
+    <div class="system-badge">[ 系統通知 ]</div>
+    <div class="logo-title">會考比序副本</div>
+    <div class="logo-sub">— RANKING DUNGEON —</div>
+  </div>
+  <div class="login-avatar">🥷</div>
+  <div class="login-label">[ 獵人登錄 ] 輸入玩家稱號</div>
+  <input class="login-input" id="nameInput" type="text" placeholder="請輸入您的名字..." maxlength="10">
+  <button class="login-btn" onclick="startGame()">▶ 進入副本</button>
+  <div class="login-desc">本副本共三關，挑戰國中會考比序規則<br>每關隨機對決，找出比序優勝者</div>
+</div>
+</div>
+
+<!-- BOSS INTRO -->
+<div class="screen" id="screenBoss">
+<div class="wrap">
+  <div style="text-align:center;padding:36px 18px;" id="bossIntroContent"></div>
+</div>
+</div>
+
+<!-- GAME -->
+<div class="screen" id="screenGame">
+<div class="wrap" style="padding-top:20px;">
+  <div class="game-header">
+    <div class="player-avatar">🥷</div>
+    <div style="flex:1;">
+      <div class="player-name-h" id="headerPlayerName">獵人</div>
+      <div class="player-rank-h" id="headerRank">[ E-RANK 獵人 ]</div>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px;min-width:64px;">
+      <div style="font-size:12px;color:#2a5080;">進度</div>
+      <div class="prog-bar" style="width:64px;"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+      <div style="font-size:13px;color:#3a6a9a;" id="progLabel">0/3</div>
+    </div>
+  </div>
+  <div class="level-tabs">
+    <div class="tab active" id="tab0" onclick="jumpLevel(0)">第一關<br><span style="font-size:12px;opacity:.7">比總分</span></div>
+    <div class="tab" id="tab1" onclick="jumpLevel(1)">第二關<br><span style="font-size:12px;opacity:.7">比積點</span></div>
+    <div class="tab" id="tab2" onclick="jumpLevel(2)">第三關<br><span style="font-size:12px;opacity:.7">單科比</span></div>
+  </div>
+  <div id="levelContent"></div>
+</div>
+</div>
+
+<!-- CERTIFICATE -->
+<div class="screen" id="screenComplete">
+<div class="cert-wrap" id="certContent"></div>
+</div>
+
+<script>
+(function(){
+  const cv=document.getElementById('particles'),ctx=cv.getContext('2d');
+  function resize(){cv.width=window.innerWidth;cv.height=window.innerHeight;}
+  resize();window.addEventListener('resize',resize);
+  const pts=[];
+  for(let i=0;i<60;i++) pts.push({x:Math.random()*1000,y:Math.random()*2000,vy:-(Math.random()*.4+.1),vx:(Math.random()-.5)*.15,r:Math.random()*1.5+.5,o:Math.random()*.6+.2});
+  function draw(){ctx.clearRect(0,0,cv.width,cv.height);pts.forEach(p=>{ctx.beginPath();ctx.arc(p.x%cv.width,p.y%cv.height,p.r,0,Math.PI*2);ctx.fillStyle=`rgba(90,160,255,${p.o})`;ctx.fill();p.y+=p.vy;p.x+=p.vx;if(p.y<-10)p.y=cv.height+10;});requestAnimationFrame(draw);}
+  draw();
+})();
+
+const SUBJECTS=['國文','數學','英文','社會','自然'];
+// L1: score A=6,B=4,C=2
+const L1_SCORE={'A++':6,'A+':6,'A':6,'B++':4,'B+':4,'B':4,'C':2};
+// L2/L3: points
+const PTS={'A++':7,'A+':6,'A':5,'B++':4,'B+':3,'B':2,'C':1};
+const ALL_GRADES=['A++','A+','A','B++','B+','B'];
+const BOSSES=[
+  {name:'托馬斯‧安德列',title:'歐洲最強 S 級獵人',emoji:'💀',rankBadge:'S-RANK',nameColor:'#e0c0a0'},
+  {name:'崔宗仁',title:'韓國第一 S 級獵人',emoji:'☠️',rankBadge:'S-RANK',nameColor:'#e0a0c0'},
+  {name:'害羞幽靈',title:'魔王軍 王級關主',emoji:'👻',rankBadge:'BOSS',nameColor:'#c0a0ff'}
+];
+const LEVEL_RANKS=['E-RANK','C-RANK','A-RANK'];
+const LEVEL_TITLES=['初探比序 — 先看會考總分','積點決勝 — 同分比積點','逐科決鬥 — 依科目順序比'];
+const REASON_TEXTS=[
+  '比序先看會考總分\nA＝6分，B＝4分，C＝2分',
+  '總分相同，改比五科總積點\n積點高者優先',
+  '總分與積點皆相同\n依國→數→英→社→自逐科比序'
+];
+
+let playerName='獵人',currentLevel=0;
+let answered=[false,false,false],correct=[false,false,false],levels=[];
+
+function sc1(g){return L1_SCORE[g]||0;}
+function pts(g){return PTS[g]||0;}
+function totalSc(gs){return gs.reduce((a,g)=>a+sc1(g),0);}
+function totalPts(gs){return gs.reduce((a,g)=>a+pts(g),0);}
+function rg(){return ALL_GRADES[Math.floor(Math.random()*ALL_GRADES.length)];}
+
+function genL0(){
+  // player wins by total score (different scores), total pts may differ
+  let s0,s1,t=0;
+  do{s0=[rg(),rg(),rg(),rg(),rg()];s1=[rg(),rg(),rg(),rg(),rg()];t++;}
+  while((totalSc(s0)<=totalSc(s1)||totalSc(s0)===totalSc(s1))&&t<1000);
+  // ensure player score > boss score
+  if(totalSc(s0)<=totalSc(s1)){s0=['A','A','A','B','B'];s1=['B','B','B','B','A'];}
+  return {s0:{grades:s0},s1:{grades:s1},hl:-1};
+}
+
+function genL1(){
+  // same total score, player wins by higher total pts
+  let s0,s1,t=0;
+  do{s0=[rg(),rg(),rg(),rg(),rg()];s1=[rg(),rg(),rg(),rg(),rg()];t++;}
+  while((totalSc(s0)!==totalSc(s1)||totalPts(s0)<=totalPts(s1))&&t<3000);
+  if(t>=3000){s0=['A++','A','A','B','B'];s1=['A+','A+','A','B','B'];}
+  // verify: s0 score: 6+6+6+4+4=26, pts 7+5+5+2+2=21; s1 score 6+6+6+4+4=26, pts 6+6+5+2+2=21 — same pts, fallback again
+  // Better fallback:
+  if(totalSc(s0)!==totalSc(s1)||totalPts(s0)<=totalPts(s1)){
+    s0=['A++','A+','B','B','B'];s1=['A','A','A','B','B'];
+    // s0 score 6+6+4+4+4=24,pts 7+6+2+2+2=19; s1 score 6+6+6+4+4=26 — scores differ, bad
+    s0=['A','A','B++','B','B'];s1=['A+','A','B','B+','B'];
+    // s0 sc=6+6+4+4+4=24 s1 sc=6+6+4+4+4=24 ok; s0 pts=5+5+4+2+2=18 s1 pts=6+5+2+3+2=18 equal bad
+    s0=['A++','A','A','B+','B'];s1=['A+','A+','A','B','B+'];
+    // s0 sc=6+6+6+4+4=26 s1 sc=6+6+6+4+4=26 ok; s0 pts=7+5+5+3+2=22 s1 pts=6+6+5+2+3=22 equal bad
+    s0=['A++','A','B++','B','B'];s1=['A+','A','B+','B','B'];
+    // sc: 6+6+4+4+4=24 both ok; pts: 7+5+4+2+2=20 vs 6+5+3+2+2=18 ok! player wins
+  }
+  return {s0:{grades:s0},s1:{grades:s1},hl:-1};
+}
+
+function gradePtsDown(g){
+  const order=['A++','A+','A','B++','B+','B'];
+  const i=order.indexOf(g); const sc=sc1(g);
+  for(let j=i+1;j<order.length;j++) if(sc1(order[j])===sc) return order[j];
+  return null;
+}
+function gradePtsUp(g){
+  const order=['A++','A+','A','B++','B+','B'];
+  const i=order.indexOf(g); const sc=sc1(g);
+  for(let j=i-1;j>=0;j--) if(sc1(order[j])===sc) return order[j];
+  return null;
+}
+
+function genL2(){
+  let s0,s1,hl=-1,t=0;
+  do{
+    s0=[rg(),rg(),rg(),rg(),rg()];
+    s1=[...s0]; hl=-1;
+    for(let a=0;a<4&&hl<0;a++){
+      for(let b=a+1;b<5;b++){
+        const down=gradePtsDown(s0[a]),up=gradePtsUp(s0[b]);
+        if(down&&up&&(pts(down)-pts(s0[a]))===(-(pts(up)-pts(s0[b])))){
+          const ns1=[...s0]; ns1[a]=down; ns1[b]=up;
+          if(totalSc(ns1)===totalSc(s0)&&totalPts(ns1)===totalPts(s0)){
+            // first diff: a, player pts > boss pts
+            if(pts(s0[a])>pts(down)){s1=ns1;hl=a;break;}
+          }
+        }
+      }
+    }
+    t++;
+  }while(hl<0&&t<500);
+  if(hl<0){
+    s0=['A++','A','A','B','B']; s1=['A+','A+','A','B','B'];
+    // sc: 26=26 ok; pts s0=7+5+5+2+2=21 s1=6+6+5+2+2=21 ok; first diff subj0: s0 A++(7)>s1 A+(6) player wins
+    hl=0;
+  }
+  return {s0:{grades:s0},s1:{grades:s1},hl};
+}
+
+function generateAllLevels(){levels=[genL0(),genL1(),genL2()];}
+
+function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo(0,0);}
+
+function startGame(){
+  // 核心修正：直接抓取主程式的 ID "nameInput"
+  const mainInput = document.getElementById('nameInput'); 
+  
+  // 取得數值，若為空則預設為 "獵人" 或 "覺醒者"
+  playerName = (mainInput && mainInput.value.trim()) || '獵人';
+  
+  // 同步顯示到副本遊戲的 Header
+  const headerName = document.getElementById('headerPlayerName');
+  if (headerName) {
+    headerName.textContent = playerName;
+  }
+
+  // 產生關卡並進入副本
+  generateAllLevels();
+  showBossIntro(0); // 跳過副本登錄頁，直接顯示 Boss 介紹
+}
+
+function showBossIntro(idx){
+  currentLevel=idx;
+  const boss=BOSSES[idx],nums=['一','二','三'];
+  document.getElementById('bossIntroContent').innerHTML=`
+    <div style="margin-bottom:10px;"><span style="font-size:14px;letter-spacing:.15em;color:#5aa0ff;border:1px solid rgba(90,160,255,.3);padding:5px 16px;border-radius:2px;">[ 第${nums[idx]}關 · ${LEVEL_RANKS[idx]} ]</span></div>
+    <div class="boss-avatar-wrap"><div class="boss-avatar">${boss.emoji}</div><div class="boss-rank-badge">${boss.rankBadge}</div></div>
+    <div class="boss-name" style="color:${boss.nameColor}">${boss.name}</div>
+    <div class="boss-title">${boss.title}</div>
+    <div class="boss-desc">系統偵測到強大敵人。<br>獵人 <b>${playerName}</b>，你必須運用<br>會考比序規則擊敗對手。<br><br><span style="color:#5aa0ff;font-weight:700;">${LEVEL_TITLES[idx]}</span><br><br>準備好了嗎？</div>
+    <button class="enter-btn" onclick="enterDungeon(${idx})">▶ 進入副本</button>`;
+  showScreen('screenBoss');
+}
+
+function enterDungeon(idx){showScreen('screenGame');updateTabs();renderLevel(idx);}
+
+function renderLevel(idx){
+  const lv=levels[idx],boss=BOSSES[idx];
+  const s0=lv.s0,s1=lv.s1,hl=lv.hl;
+  const sc0=totalSc(s0.grades),sc1_=totalSc(s1.grades);
+  const pt0=totalPts(s0.grades),pt1=totalPts(s1.grades);
+
+  let rows=SUBJECTS.map((sub,i)=>{
+    const g0=s0.grades[i],g1=s1.grades[i];
+    const win0=(hl===i&&pts(g0)>pts(g1));
+    return `<tr${hl===i?' class="hl"':''}>
+      <td class="lbl">${sub}</td>
+      <td class="mono${win0?' win-cell':''}">${g0}</td>
+      <td class="mono">${g1}</td>
+    </tr>`;
+  }).join('');
+  rows+=`<tr style="border-top:1px solid rgba(90,160,255,.18);">
+    <td class="lbl" style="color:#5aa0ff;font-weight:700;font-size:15px;">總分</td>
+    <td style="color:#5aa0ff;font-weight:700;font-size:18px;">${sc0}</td>
+    <td style="color:${sc1_>sc0?'#5aa0ff':'#2a5a80'};font-weight:700;font-size:18px;">${sc1_}</td>
+  </tr>`;
+
+  let scenText='';
+  if(idx===0) scenText=`A=6分，B=4分，C=2分，總分不同，直接比較`;
+  else if(idx===1) scenText=`雙方總分相同（${sc0}分），進入積點比較`;
+  else scenText=`總分（${sc0}分）與積點（${pt0}）均相同，啟動逐科比序`;
+
+  const bossShort=boss.name.length>5?boss.name.substring(0,4)+'…':boss.name;
+
+  const html=`<div class="quest-card">
+    <div class="rank-row"><span class="rank-badge">${LEVEL_RANKS[idx]}</span><span class="quest-title">${LEVEL_TITLES[idx]}</span></div>
+    <div class="vs-row">
+      <div class="combatant"><div class="combatant-avatar">🥷</div><div class="combatant-name">${playerName}</div></div>
+      <div class="vs-badge">VS</div>
+      <div class="combatant"><div class="combatant-avatar boss-side">${boss.emoji}</div><div class="combatant-name boss-color">${boss.name}</div></div>
+    </div>
+    <div class="scenario-box">${scenText}</div>
+    <table class="score-table">
+      <thead><tr><th style="text-align:left">科目</th><th>${playerName}</th><th>${bossShort}</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+    <div class="quest-q"><p>[ 判定任務 ] 哪位比序優先？</p>
+      <div class="choices">
+        <button class="choice-btn" id="btn0" onclick="answer(${idx},'player')">▶ ${playerName}優先</button>
+        <button class="choice-btn" id="btn1" onclick="answer(${idx},'boss')">▶ ${bossShort}優先</button>
+      </div>
+    </div>
+    <div class="feedback" id="feedback"></div>
+    <div class="reason-box" id="reasonBox" style="display:none;">
+      <div class="reason-label">[ 比序關鍵 ]</div>
+      <div class="reason-text">${REASON_TEXTS[idx].replace(/\n/g,'<br>')}</div>
+    </div>
+    ${idx<2?`<button class="next-btn" id="nextBtn" onclick="goNext(${idx})">▶▶ 前往第${['','二','三'][idx+1]}關</button>`
+           :`<button class="next-btn" id="nextBtn" onclick="showCertificate()">▶▶ 查看通關評鑑</button>`}
+  </div>`;
+  document.getElementById('levelContent').innerHTML=html;
+  if(answered[idx]) restoreState(idx);
+}
+
+function buildExplain(idx){
+  const lv=levels[idx],s0=lv.s0,s1=lv.s1;
+  const sc0=totalSc(s0.grades),sc1_=totalSc(s1.grades);
+  const pt0=totalPts(s0.grades),pt1=totalPts(s1.grades);
+  if(idx===0) return `${playerName}總分：${sc0}分　對手總分：${sc1_}分\n${playerName}總分 ${sc0} ＞ 對手 ${sc1_}，比序優先！`;
+  if(idx===1) return `雙方總分均為 ${sc0} 分\n${playerName}積點：${pt0}　對手積點：${pt1}\n積點 ${pt0} ＞ ${pt1}，${playerName}優先！`;
+  const df=lv.hl;
+  return `總分 ${sc0} 分、積點 ${pt0} 均相同\n逐科比到「${SUBJECTS[df]}」\n${playerName} ${PTS[s0.grades[df]]}分 ＞ 對手 ${PTS[s1.grades[df]]}分\n${playerName}獲勝！`;
+}
+
+function answer(idx,choice){
+  if(answered[idx]) return;
+  answered[idx]=true;
+  const ok=(choice==='player');
+  correct[idx]=ok;
+  document.getElementById('btn0').disabled=true;document.getElementById('btn1').disabled=true;
+  document.getElementById('btn0').classList.add('correct');
+  if(!ok) document.getElementById('btn1').classList.add('wrong');
+  const fb=document.getElementById('feedback');
+  fb.className='feedback show '+(ok?'success':'error');
+  fb.innerHTML=(ok?'[ 判定成功！] ':'[ 判定失敗 ] 正確答案是'+playerName+'<br>')+'<br>'+buildExplain(idx).replace(/\n/g,'<br>');
+  document.getElementById('reasonBox').style.display='block';
+  document.getElementById('nextBtn').classList.add('show');
+  updateProgress();
+  const d=answered.filter(Boolean).length;
+  document.getElementById('headerRank').textContent=['[ E-RANK 獵人 ]','[ C-RANK 獵人 ]','[ A-RANK 獵人 ]','[ S-RANK 獵人 ]'][d];
+}
+
+function restoreState(idx){
+  document.getElementById('btn0').disabled=true;document.getElementById('btn1').disabled=true;
+  document.getElementById('btn0').classList.add('correct');
+  if(!correct[idx]) document.getElementById('btn1').classList.add('wrong');
+  const fb=document.getElementById('feedback');
+  fb.className='feedback show '+(correct[idx]?'success':'error');
+  fb.innerHTML=(correct[idx]?'[ 判定成功！] ':'[ 判定失敗 ] ')+'<br>'+buildExplain(idx).replace(/\n/g,'<br>');
+  document.getElementById('reasonBox').style.display='block';
+  document.getElementById('nextBtn').classList.add('show');
+}
+
+function goNext(idx){currentLevel=idx+1;showBossIntro(currentLevel);}
+function jumpLevel(idx){currentLevel=idx;updateTabs();renderLevel(idx);}
+function updateTabs(){for(let i=0;i<3;i++){const t=document.getElementById('tab'+i);if(!t)return;t.className='tab'+(i===currentLevel?' active':'')+(answered[i]&&i!==currentLevel?' cleared':'');}}
+function updateProgress(){const d=answered.filter(Boolean).length;document.getElementById('progFill').style.width=(d/3*100)+'%';document.getElementById('progLabel').textContent=d+'/3';}
+
+function showCertificate(){
+  const score=correct.filter(Boolean).length;
+  let rc,rt,et,ed,se;
+  if(score===3){rc='srank';rt='S-RANK';et='精熟';ed='完全掌握會考比序三大關鍵，<br>具備攻略地下城副本的絕佳實力！';se='🏆';}
+  else if(score===2){rc='arank';rt='A-RANK';et='基礎';ed='已掌握基礎比序概念，<br>再多練習即可達到精熟境界！';se='🎖️';}
+  else if(score===1){rc='brank';rt='B-RANK';et='待加強';ed='比序概念尚需加強，<br>建議再次挑戰，熟悉三步比序口訣！';se='📋';}
+  else{rc='frank';rt='F-RANK';et='運氣太差，請多多加油！';ed='別灰心！比序規則需要多練習，<br>再次進入副本重新挑戰吧！';se='💪';}
+  const today=new Date();
+  const ds=`${today.getFullYear()} 年 ${today.getMonth()+1} 月 ${today.getDate()} 日`;
+  document.getElementById('certContent').innerHTML=`
+  <div class="cert-outer">
+    <div class="cert-inner">
+      <div class="cert-corner tl"></div><div class="cert-corner tr"></div>
+      <div class="cert-corner bl"></div><div class="cert-corner br"></div>
+      <div class="cert-sys">[ 系統認證 · 副本通關評鑑書 ]</div>
+      <div class="cert-title">地下城副本攻略認證</div>
+      <div class="cert-divider"><div class="cert-divider-line"></div><div style="font-size:16px;">⚔️</div><div class="cert-divider-line r"></div></div>
+      <div style="font-size:15px;color:#3a6a9a;margin-bottom:4px;">茲證明獵人</div>
+      <div class="cert-player">${playerName}</div>
+      <div class="cert-player-sub">已完成「會考比序副本」挑戰</div>
+      <div class="cert-divider"><div class="cert-divider-line"></div><div style="font-size:14px;">✦</div><div class="cert-divider-line r"></div></div>
+      <div style="font-size:14px;color:#3a6a9a;letter-spacing:.1em;margin-bottom:10px;">副本能力評鑑</div>
+      <div class="cert-rank ${rc}">${rt}</div>
+      <div class="cert-eval ${rc}">${et}</div>
+      <div class="cert-desc">${ed}<br><br><b>比序三步口訣</b><br>第一步：比會考<b>總分</b>（A=6、B=4、C=2）<br>第二步：總分同 → 比五科<b>積點</b>（A++=7⋯C=1）<br>第三步：積點同 → 依<b>國→數→英→社→自</b>逐科比</div>
+      <div class="cert-seal">${se}</div>
+      <div class="cert-date">認證日期：${ds}</div>
+    </div>
+  </div>
+  <button class="restart-btn" onclick="restartGame()">[ 重新挑戰副本 ]</button>`;
+  showScreen('screenComplete');
+}
+
+function restartGame(){answered=[false,false,false];correct=[false,false,false];currentLevel=0;generateAllLevels();showScreen('screenLogin');}
+document.getElementById('nameInput').addEventListener('keydown',e=>{if(e.key==='Enter')startGame();});
+</script>
+</body>
+      </div>
+     </div>
+    </div>
+   </div>
+  </div>
+  <script>
+    let moralNoRecord = false;
+    let scores = { skill1: 0, skill2: 0, skill3: 0 };
+    let currentCharacter = '🗡️';
+
+    // 初始化 SDK
+    async function initSDK() {
+      if (window.elementSdk) {
+        await window.elementSdk.init({
+          defaultConfig: {
+            player_name: '覺醒者',
+            main_title: '系統提示'
+          },
+          onConfigChange: (config) => {
+            if (config.player_name) {
+              document.getElementById('playerDisplay').textContent = config.player_name;
+              document.getElementById('nameInput').value = config.player_name;
+            }
+            if (config.main_title) {
+              document.getElementById('systemTitle').textContent = config.main_title;
+            }
+          },
+          mapToCapabilities: () => ({
+            recolorables: [],
+            borderables: [],
+            fontEditable: undefined,
+            fontSizeable: undefined
+          }),
+          mapToEditPanelValues: (config) => new Map([
+            ['player_name', config.player_name || '覺醒者'],
+            ['main_title', config.main_title || '系統提示']
+          ])
+        });
+      }
+    }
+
+    // 更新玩家名字
+    function updatePlayerName() {
+      const nameInput = document.getElementById('nameInput');
+  const nameValue = nameInput.value.trim() || '覺醒者';
+  
+  // 1. 更新主程式顯示
+  document.getElementById('playerDisplay').textContent = nameValue;
+  
+  // 2. 同步給副本全域變數
+  if (typeof playerName !== 'undefined') {
+    playerName = nameValue;
+  }
+  
+  // 3. 同步給副本 Header (如果副本已經開啟)
+  const headerName = document.getElementById('headerPlayerName');
+  if (headerName) {
+    headerName.textContent = nameValue;
+  }
+    }
+
+
+
+    // TAB SWITCHING
+    function switchTab(tabName) {
+      document.querySelectorAll('.tab-panel').forEach(el => el.classList.remove('active'));
+      document.getElementById(tabName).classList.add('active');
+      
+      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+      event.target.classList.add('active');
+    }
+
+    // FLOATING PANEL DRAGGING
+    let isDragging = false;
+    let offsetX = 0, offsetY = 0;
+    const floatingPanel = document.getElementById('floatingPanel');
+
+    floatingPanel.addEventListener('mousedown', (e) => {
+      if (e.target.closest('.character-selector') || e.target.closest('.panel-score') || e.target.closest('.breakdown')) {
+        return;
+      }
+      isDragging = true;
+      offsetX = e.clientX - floatingPanel.offsetLeft;
+      offsetY = e.clientY - floatingPanel.offsetTop;
+      floatingPanel.classList.add('dragging');
+    });
+
+    document.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      floatingPanel.style.left = (e.clientX - offsetX) + 'px';
+      floatingPanel.style.top = (e.clientY - offsetY) + 'px';
+    });
+
+    document.addEventListener('mouseup', () => {
+      isDragging = false;
+      floatingPanel.classList.remove('dragging');
+    });
+
+    // UPDATE FLOATING PANEL
+    let prevTotal = 0;
+    
+    const rankData = {
+      'E': { title: 'E級', subtitle: '覺醒初期', avatar: '⛏️', range: '60分以下' },
+      'D': { title: 'D級', subtitle: '潛力覺醒者', avatar: '🗡️', range: '62~68分' },
+      'C': { title: 'C級', subtitle: '潛力新秀', avatar: '🏹', range: '70~78分' },
+      'B': { title: 'B級', subtitle: '中堅份子', avatar: '🛡️', range: '80~92分' },
+      'A': { title: 'A級', subtitle: '精銳部隊', avatar: '⚔️', range: '94~98分' },
+      'S': { title: 'S級', subtitle: '國家級戰力', avatar: '👑', range: '100分' }
+    };
+
+    const characterMap = {
+      'S': '👑',
+      'A': '⚔️',
+      'B': '🛡️',
+      'C': '🏹',
+      'D': '🗡️',
+      'E': '⛏️'
+    };
+
+    function getRankByScore(total) {
+      if (total >= 100) return 'S';
+      if (total >= 94) return 'A';
+      if (total >= 80) return 'B';
+      if (total >= 70) return 'C';
+      if (total >= 62) return 'D';
+      return 'E';
+    }
+
+    function updatePanel() {
+      const currentTotal = scores.skill1 + scores.skill2 + scores.skill3;
+      
+      // 更新等級
+      const rank = getRankByScore(currentTotal);
+      const rankInfo = rankData[rank];
+      
+      document.getElementById('panelAvatar').textContent = characterMap[rank];
+      document.getElementById('panelRankTitle').textContent = rankInfo.title;
+      document.getElementById('panelRankSubtitle').textContent = rankInfo.subtitle;
+      
+      if (currentTotal > prevTotal) {
+        floatingPanel.classList.remove('level-up');
+        void floatingPanel.offsetWidth;
+        floatingPanel.classList.add('level-up');
+        prevTotal = currentTotal;
+      }
+      
+      document.getElementById('panelTotal').textContent = currentTotal.toFixed(1);
+      document.getElementById('panelS1').textContent = scores.skill1.toFixed(1);
+      document.getElementById('panelS2').textContent = scores.skill2.toFixed(1);
+      document.getElementById('panelS3').textContent = scores.skill3.toFixed(1);
+      document.getElementById('totalScore').textContent = currentTotal.toFixed(1);
+      document.getElementById('stat1').textContent = scores.skill1.toFixed(1);
+      document.getElementById('stat2').textContent = scores.skill2.toFixed(1);
+      document.getElementById('stat3').textContent = scores.skill3.toFixed(1);
+      
+      // Auto-select rank card
+      const rankCard = document.getElementById('rank-' + rank);
+      if (rankCard) {
+        document.querySelectorAll('.rank-card').forEach(el => el.classList.remove('active'));
+        rankCard.classList.add('active');
+      }
+      
+      // Update rank glow
+      updateRankGlow();
+    }
+
+    // SKILL 1
+    function updateSkill1() {
+      const graduation = parseInt(document.querySelector('input[name="graduation"]:checked')?.value || 0);
+      const proximity = parseInt(document.querySelector('input[name="proximity"]:checked')?.value || 0);
+      
+      // 更新標籤發亮
+      document.querySelectorAll('label[id^="grad_"]').forEach(el => el.classList.remove('selected'));
+      if (graduation === 6) document.getElementById('grad_6').classList.add('selected');
+      if (graduation === 2) document.getElementById('grad_2').classList.remove('selected');
+      if (graduation === 0) document.getElementById('grad_0').classList.remove('selected');
+
+      document.querySelectorAll('label[id^="prox_"]').forEach(el => el.classList.remove('selected'));
+      if (proximity === 5) document.getElementById('prox_5').classList.add('selected');
+      if (proximity === 0) document.getElementById('prox_0').classList.remove('selected');
+      
+      const parent = document.getElementById('career_parent')?.value || '';
+      const mentor = document.getElementById('career_mentor')?.value || '';
+      const counselor = document.getElementById('career_counselor')?.value || '';
+      
+      let career = 0, careerStatus = '選擇三項意見';
+      if (parent && mentor && counselor) {
+        const paths = [parent, mentor, counselor];
+        const unique = new Set(paths).size;
+        if (unique === 1) { career = 6; careerStatus = '✅ 三項一致 (6分)'; }
+        else if (unique === 2) { career = 4; careerStatus = '⚠️ 兩項一致 (4分)'; }
+        else { career = 2; careerStatus = '❌ 皆不同 (2分)'; }
+      }
+      
+      const wish = parseInt(document.getElementById('s1_wish_select')?.value || 0);
+      
+      const total = Math.min(graduation + proximity + career + wish, 32);
+      
+      document.getElementById('s1_grad').textContent = graduation;
+      document.getElementById('s1_prox').textContent = proximity;
+      document.getElementById('s1_career').textContent = career;
+      document.getElementById('s1_career_status').textContent = careerStatus;
+      document.getElementById('s1_wish_score').textContent = wish;
+      document.getElementById('skill1_total').textContent = total.toFixed(1);
+      
+      scores.skill1 = total;
+      updatePanel();
+    }
+
+    // SKILL 2
+    function toggleMoral() {
+      moralNoRecord = !moralNoRecord;
+      document.getElementById('moralBtn').textContent = moralNoRecord ? '✓ 已達成' : '未達成';
+      updateSkill2();
+    }
+
+    function updateSkill2() {
+      let bal = 0;
+      document.querySelectorAll('label[id^="bal_"]').forEach(el => el.classList.remove('selected'));
+      if (document.getElementById('s2_bal_pe')?.checked) { bal += 3; document.getElementById('bal_pe').classList.add('selected'); }
+      if (document.getElementById('s2_bal_art')?.checked) { bal += 3; document.getElementById('bal_art').classList.add('selected'); }
+      if (document.getElementById('s2_bal_integrated')?.checked) { bal += 3; document.getElementById('bal_integrated').classList.add('selected'); }
+      if (document.getElementById('s2_bal_tech')?.checked) { bal += 3; document.getElementById('bal_tech').classList.add('selected'); }
+      bal = Math.min(bal, 9);
+
+      const majorMerit = parseFloat(document.getElementById('s2_major_merit')?.value || 0) * 4.5;
+      const merit = parseFloat(document.getElementById('s2_merit')?.value || 0) * 1.5;
+      const commendation = parseFloat(document.getElementById('s2_commendation')?.value || 0) * 0.5;
+      const minorDemerit = parseFloat(document.getElementById('s2_minor_demerit')?.value || 0) * 1.5;
+      const majorDemerit = parseFloat(document.getElementById('s2_major_demerit')?.value || 0) * 4.5;
+      const warning = parseFloat(document.getElementById('s2_warning')?.value || 0);
+      
+      let moral = 0;
+      const hasNoDemerits = minorDemerit === 0 && majorDemerit === 0 && warning < 3;
+      if (moralNoRecord && hasNoDemerits) moral = 6;
+      moral += Math.max(0, majorMerit + merit + commendation - minorDemerit - majorDemerit - warning * 0.5);
+      moral = Math.min(moral, 10);
+
+      const leaderSemesters = Math.min(parseFloat(document.getElementById('s2_leader_semesters')?.value || 0), 2) * 2;
+      const serviceHours = parseFloat(document.getElementById('s2_service_hours')?.value || 0) * 0.3;
+      let service = leaderSemesters + serviceHours;
+      service = Math.min(service, 10);
+
+      const talent = Math.min(parseFloat(document.getElementById('s2_talent')?.value || 0), 5);
+      const fitness = parseInt(document.querySelector('input[name="s2_fitness"]:checked')?.value || 0);
+      const localLang = parseInt(document.querySelector('input[name="s2_local_lang"]:checked')?.value || 0);
+
+      // 更新fitness和language標籤
+      document.querySelectorAll('label[id^="fit_"]').forEach(el => el.classList.remove('selected'));
+      if (fitness === 6) document.getElementById('fit_yes').classList.add('selected');
+
+      document.querySelectorAll('label[id^="lang_"]').forEach(el => el.classList.remove('selected'));
+      if (localLang === 2) document.getElementById('lang_yes').classList.add('selected');
+
+      document.getElementById('s2_bal').textContent = bal.toFixed(1);
+      document.getElementById('s2_moral').textContent = moral.toFixed(1);
+      document.getElementById('s2_service').textContent = service.toFixed(1);
+      document.getElementById('s2_talent_score').textContent = talent.toFixed(1);
+      document.getElementById('s2_fitness').textContent = fitness;
+      document.getElementById('s2_local_lang_score').textContent = localLang;
+      
+      const total = Math.min(bal + moral + service + talent + fitness + localLang, 35);
+      document.getElementById('skill2_total').textContent = total.toFixed(1);
+      
+      scores.skill2 = total;
+      updatePanel();
+    }
+
+    // SKILL 3
+    function updateSkill3() {
+      const levelMap = { '6': 6, '4': 4, '2': 2 };
+      const writingMap = { '3': 3, '2': 2, '1': 1 };
+      
+      const chinese = levelMap[document.getElementById('s3_chinese')?.value] || 0;
+      const english = levelMap[document.getElementById('s3_english')?.value] || 0;
+      const math = levelMap[document.getElementById('s3_math')?.value] || 0;
+      const science = levelMap[document.getElementById('s3_science')?.value] || 0;
+      const social = levelMap[document.getElementById('s3_social')?.value] || 0;
+      const writing = writingMap[document.getElementById('s3_writing')?.value] || 0;
+      
+      const total = chinese + english + math + science + social + writing;
+      document.getElementById('skill3_total').textContent = total.toFixed(1);
+      
+      scores.skill3 = total;
+      updatePanel();
+    }
+
+    // Rank selection function
+    function selectRank(element, rank) {
+      document.querySelectorAll('.rank-card').forEach(el => el.classList.remove('active'));
+      element.classList.add('active');
+      document.getElementById('rankDisplay').textContent = rank;
+    }
+
+    // Update rank glow based on score
+    function updateRankGlow() {
+      const currentTotal = scores.skill1 + scores.skill2 + scores.skill3;
+      const rank = getRankByScore(currentTotal);
+      
+      document.querySelectorAll('.rank-card').forEach(el => el.classList.remove('glowing'));
+      
+      const rankCard = document.getElementById('rank-' + rank);
+      if (rankCard) {
+        rankCard.classList.add('glowing');
+      }
+    }
+
+    // INIT
+    window.addEventListener('load', () => {
+      initSDK();
+      lucide.createIcons();
+    });
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9e147014f4af3323',t:'MTc3NDM0MjMyNy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
+    
+  </body>
+  
+</html>
